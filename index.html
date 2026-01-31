@@ -30,6 +30,7 @@
     </header>
 
     <div id='main-content'>
+      <img id='testImg' style='height: 100px; width: 100px;'><br>
       <input type="text" placeholder='store name' id="nameInput">
       <input type="button" onclick="add()" value="Add Store">
       <input type="button" onclick="delet()" value="Delete Store">
@@ -66,6 +67,7 @@
     document.addEventListener("DOMContentLoaded", () => {
       window.onDataReady = () => {
         refresh();
+        document.getElementById('testImg').src=stores[0].Products[0].image;
       }
     });
   </script>
