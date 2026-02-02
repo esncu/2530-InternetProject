@@ -45,6 +45,7 @@
       }
       .productContainer *{
         text-overflow: ellipsis;
+        cursor: pointer;
       }
       .productContainer-image{
         grid-area: A;
@@ -99,48 +100,15 @@
     </div>
   </body>
   <script>
-  const mainDiv = document.getElementById('main-content');
-  const recentlyAddedBar = document.getElementById('recentlyAdded-bar');
-    document.addEventListener("DOMContentLoaded",()=>{window.onDataReady = () => {
-      const ra_prods = [];
-      stores.forEach((stor)=>{
-        if(stor.Products?.length)
-          ra_prods.push(...stor.Products);
-      });
-      ra_prods.forEach((prod)=>{
-        let pdiv = document.createElement('div');
-        let img = document.createElement('img');
-        let name = document.createElement('p');
-        let rating = document.createElement('p');
-        let price = document.createElement('p');
-
-        pdiv.className = 'productContainer';
-        img.className = 'productContainer-image';
-        name.className = 'productContainer-name';
-        rating.className = 'productContainer-rating';
-        price.className = 'productContainer-price';
-
-        img.src = prod.image;
-        name.textContent = prod.name;
-        rating.textContent = prod.avgRating.toFixed(2) + '★';
-        price.textContent = "RM " + prod.price;
-        
-        pdiv.append(img);
-        pdiv.append(name);
-        pdiv.append(rating);
-        pdiv.append(price);
-
-        recentlyAddedBar.append(pdiv);
-      });
-
-      //per store
-      stores.forEach((stor)=>{
-        let title = document.createElement('h2');
-        let sdiv = document.createElement('div');
-
-        title.textContent = stor.name;
-        sdiv.className = 'productContainer-bar';
-        stor.Products.forEach((prod)=>{
+    const mainDiv = document.getElementById('main-content');
+    const recentlyAddedBar = document.getElementById('recentlyAdded-bar');
+      document.addEventListener("DOMContentLoaded",()=>{window.onDataReady = () => {
+        const ra_prods = [];
+        stores.forEach((stor)=>{
+          if(stor.Products?.length)
+            ra_prods.push(...stor.Products);
+        });
+        ra_prods.forEach((prod)=>{
           let pdiv = document.createElement('div');
           let img = document.createElement('img');
           let name = document.createElement('p');
@@ -155,19 +123,61 @@
 
           img.src = prod.image;
           name.textContent = prod.name;
-          rating.textContent = prod.avgRating.toFixed(2) + '*';
+          rating.textContent = prod.avgRating.toFixed(2) + '★';
           price.textContent = "RM " + prod.price;
+          pdiv.onclick = ()=>{
+            goto(prod.id);
+          };
           
           pdiv.append(img);
           pdiv.append(name);
           pdiv.append(rating);
           pdiv.append(price);
 
-          sdiv.append(pdiv);
+          recentlyAddedBar.append(pdiv);
         });
-        mainDiv.append(title);
-        mainDiv.append(sdiv);
-      });
-    }});
+
+        //per store
+        stores.forEach((stor)=>{
+          let title = document.createElement('h2');
+          let sdiv = document.createElement('div');
+
+          title.textContent = stor.name;
+          sdiv.className = 'productContainer-bar';
+          stor.Products.forEach((prod)=>{
+            let pdiv = document.createElement('div');
+            let img = document.createElement('img');
+            let name = document.createElement('p');
+            let rating = document.createElement('p');
+            let price = document.createElement('p');
+
+            pdiv.className = 'productContainer';
+            img.className = 'productContainer-image';
+            name.className = 'productContainer-name';
+            rating.className = 'productContainer-rating';
+            price.className = 'productContainer-price';
+
+            img.src = prod.image;
+            name.textContent = prod.name;
+            rating.textContent = prod.avgRating.toFixed(2) + '*';
+            price.textContent = "RM " + prod.price;
+            pdiv.onclick = ()=>{
+              goto(prod.id);
+            };
+            
+            pdiv.append(img);
+            pdiv.append(name);
+            pdiv.append(rating);
+            pdiv.append(price);
+
+            sdiv.append(pdiv);
+          });
+          mainDiv.append(title);
+          mainDiv.append(sdiv);
+        });
+      }});
+    function goto(id){
+      window.location.href='./product.html?id='+id;
+    }
   </script>
 </html>
