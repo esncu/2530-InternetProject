@@ -79,9 +79,9 @@
       display: grid;
       grid-template-columns: auto auto;
       grid-template-areas:
-        "A B"
-        "A C"
-        "D D";
+        "A B E"
+        "A C E"
+        "D D E";
       margin: 0 0 10px 0;
       text-align: left;
     }
@@ -98,6 +98,13 @@
     .cartItemPrice{
       grid-area: C;
       width: 100%;
+    }
+    .cartItemQuan{
+      grid-area: E;
+      width: 100%;
+      font-weight: bold;
+      text-align: right;
+      margin: auto 0 auto 0;
     }
     hr{
       grid-area: D;
@@ -163,32 +170,38 @@ Malaysia
     const cartDiv = document.getElementById('cartDiv');
     const form = document.getElementById('main-content');
 
-    let totalPrice = 0;
+    let totalPrice = 0, totalItems=0;
     document.addEventListener("DOMContentLoaded",()=>{window.onDataReady = () => {
       cart.forEach((cartItem) => {
         let ciDiv = document.createElement('div');
         let img = document.createElement('img');
         let name = document.createElement('p');
         let price = document.createElement('p');
+        let quan = document.createElement('p');
         ciDiv.className='cartItemDiv';
         img.className='cartItemImg';
         name.className='cartItemName';
         price.className='cartItemPrice';
+        quan.className='cartItemQuan';
 
         img.src = cartItem.image;
         name.textContent = cartItem.name;
         price.textContent = 'RM '+cartItem.price.toFixed(2);
+        quan.textContent = 'x'+ cartItem.quantity;
 
         ciDiv.append(img);
         ciDiv.append(name);
         ciDiv.append(price);
+        ciDiv.append(quan);
         ciDiv.append(document.createElement('hr'));
 
-        totalPrice+=cartItem.price;
+        totalPrice+=cartItem.price * cartItem.quantity;
+        totalItems+=cartItem.quantity;
 
         cartDiv.append(ciDiv);
       })
-      document.getElementById('priceLabel').textContent = 'Total Price: RM '+totalPrice;
+      document.getElementById('priceLabel').textContent = 'Total Price: RM '+totalPrice.toFixed(2);
+      document.getElementById('cartDivHead').textContent = 'Items in the Order ('+totalItems+')';
     }});
     document.getElementById('checkoutBtn').addEventListener('click', ()=>{
       form.action='confirm.html';
