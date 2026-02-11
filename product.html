@@ -134,6 +134,7 @@
       const params = new URLSearchParams(window.location.search);
       const id = params.get("id");
       const productId = parseInt(id); // convert string to number
+      var demoStore;
 
       document.addEventListener("DOMContentLoaded", () => {
         window.onDataReady = () => {
@@ -141,7 +142,7 @@
           function getProductById(store, productId) { return store.Products.find(p => p.id === productId)};
 
           // find the store that *contains* this product
-          let demoStore = stores.find(store => store.Products.some(p => p.id === productId)); //the .some() method returns true as soon as an element matches
+          demoStore = stores.find(store => store.Products.some(p => p.id === productId)); //the .some() method returns true as soon as an element matches
           if (!demoStore) //product not found 
           {
             alert("The product does not exist");
@@ -252,6 +253,15 @@
 
     function gotoComment(){
       window.location.href='./product-comment.html?id='+productId;
+    }
+
+    function viewShop(){
+      localStorage.setItem('selectedStoreId', demoStore.name);
+      window.location.href='./shop_user.html';
+    }
+
+    function chatShop(){
+      alert("Seller is unavailable...");
     }
     </script>
   </body>

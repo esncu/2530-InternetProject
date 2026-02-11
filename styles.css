@@ -90,3 +90,19 @@ body{
   top: 100px;
   text-align: center;
 }
+
+#topar-btn{
+height: 52px;
+width: 52px;
+margin: 0;
+padding: 0;
+}
+#topbar-btn img{
+height: 52px;
+width: 52px;
+margin: 0;
+padding: 0;
+}
+.hidden {
+  display: none;
+}

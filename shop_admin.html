@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Admin Shop Page</title>
+        <link rel="stylesheet" href="styles.css">
+        <script src='session.js'></script>
+        <script src="data.js"></script>
+        <script src="togglesidebar.js"></script>
+         
+        <style>
+            /*Overriding external css*/
+            html,body, #main-content, .prod-display{
+                overflow: auto !important;
+            }
+            body{
+                display: block !important;
+            }
+
+            /*Main content (pushed under topbar)*/
+
+            /*visible sidebar*/
+            #main-content{
+                margin-top: 70px !important; /* push below topbar */
+                margin-left: 220px !important; /* space for sidebar */
+                padding: 20px !important;
+                transition: all 0.3s ease !important;
+
+                display: block !important;
+                overflow-y:auto !important;
+            }
+            /*hidden sidebar*/
+            #main-content.full {
+                margin-left: 20px !important;
+            }
+
+            /*category bar and product layout*/
+            #main-content .container{
+                display: flex !important;
+                margin-top: 30px !important;
+                height: auto
+
+                
+            }
+
+            /*product display zone*/
+
+            /*displays product cards*/
+            #main-content .prod-display{
+                height:100%;
+                flex:1;
+                padding: 20px !important;
+                display: flex !important;
+                flex-wrap: wrap;
+
+                grid-template-columns: repeat (auto-fill, minmax(220px, 1fr)) !important;
+                gap: 20px !important;
+
+                max-height: calc(100vh - 70px); /* adjust based on topbar height */
+                overflow-y: scroll !important;
+
+                transition: opacity 0.3s ease;
+            }
+            /*hides product display when editor is active*/
+            .prod-display.hidden {
+                opacity: 0 !important;
+                display: none !important;
+            }
+
+            #main-content .product{
+                background-color:white !important;
+                border: 1px solid gray !important;
+                text-align: center;
+                padding: 15px;
+                border-radius: 5px;
+
+                height: 300px;
+                width: 200px;
+                flex: 0 0 200px;
+            }
+            .product img{
+                width: 100%;
+                height: 150px;
+                background-color: white;
+                margin-bottom: 10px;
+            }
+            .product .name{
+                font-weight: bold;
+                margin-bottom: 5px;
+            }
+            .product .price{
+                color: red;
+            }
+            .product .modify-btn{
+                background-color: var(--prim-color) !important;
+                border: 1px solid var(--prim-color) !important;
+                border-radius: 10px;
+                text-align: center;
+                padding:15px;
+
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                overflow: visible !important;
+                transition: transform 0.2s ease;
+            }
+
+            #main-content .prod-editor{
+                background-color: var(--fg-color);
+                padding: 30px;
+                border-radius: 10px;
+                max-width: auto;
+                margin-left: auto;
+                margin-right: auto;
+
+                max-height: 550px;
+            }
+            .prod-editor h2 {
+            margin-bottom: 20px;
+            color: black;
+            text-align: center;
+            text-decoration: underline;
+            }
+            /* Form sections */
+            .prod-editor label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+            }
+
+            .prod-editor input[type="text"],
+            .prod-editor input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid var(--prim-color);
+            border-radius: 5px;
+            font-size: 16px;
+            }
+
+            /* Action buttons */
+            .prod-editor button {
+            padding: 10px 20px;
+            margin: 10px 5px 0 0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s ease;
+            }
+
+            /* Modify/Add button */
+            .prod-editor button:first-of-type {
+            background-color: var(--prim-color); /* purple */
+            color: var(--text-color);
+            }
+
+            /* Delete button */
+            .prod-editor button:last-of-type {
+            background-color: #e74c3c; /* red */
+            color: #fff;
+            }
+
+            /* hover effect */
+            #product-editor button:hover {
+            transform: scale(1.05);
+            }
+
+            /*category bar zone*/
+            .catbar {
+                width: 200px;
+                background-color: var(--sec-color);
+                padding: 20px;
+            }
+            .catbar h3 {
+                margin-top: 0;
+            }
+            .catbar ul {
+                list-style: none;
+                padding: 0;
+            }
+            .catbar ul li {
+                margin: 10px 0;
+                cursor: pointer;
+            }
+            .catbar button{
+                color: black;
+                font-weight: bold;
+                border: none;
+                background-color: var(--sec-color);
+                cursor: pointer;
+            }
+            .catbar button:hover{
+                transform: scale(1.02);
+                text-decoration: underline;
+            }
+
+            /*store info bar (above product and catbar)*/
+            .store-info {
+                position: sticky !important;
+                top:0px !important;
+                background-color: var(--sec-color) !important;
+                padding: 15px 20px;
+                border: 3px solid var(--prim-color) !important;
+                border-radius: 10px !important;
+                margin-bottom:30px !important;
+
+                height: 100px;
+                align-items: center;
+
+                z-index:500 !important;
+                display: flex;
+
+            }
+            .store-info h2{
+                margin: 0px;
+            }
+           .store-info h2{
+                margin: 0px;
+            }
+            .store-info img{
+                width: 80px;
+                height: 80px;
+                object-fit: contain;
+                margin-right: 20px;
+            }
+            .store-details{
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
+            .store-details h2{
+                margin: 0 0 10px;
+            }
+            /*product card*/
+            .product-link{
+                text-decoration: none;
+                color: inherit;
+                display: block;
+            }
+            .product-link .product{
+                cursor: pointer;
+                transition: transform 0.2s ease;
+            }
+            .product-link .product:hover{
+                transform: scale(1.02);
+            }
+
+            /*sales report zone*/
+            #main-content .sales{
+                background-color: var(--fg-color);
+                padding: 20px;
+                border-radius: 10px;
+                max-width: auto;
+                margin-left: auto;
+                margin-right: auto;
+
+                max-height: 550px;
+            }
+            .sales table{
+                border-collapse: collapse;
+                width: 100%;
+                background-color: white;
+                border: 2px solid black;
+            }
+            .sales td, .sales th{
+                border: 1px solid black;
+                padding: 8px;
+                text-align: left;
+            }
+            .sales th{
+                background-color: var(--sec-color);
+                font-weight: bold;
+            }
+        </style>
+    </head>
+
+
+
+    <body>
+        <!--sidebar-->
+        <aside id='sidebar'>
+            <a href="index.html">Home</a>
+            <a href="panel.html">Profile</a>
+            <a href="cart.html">Cart</a>
+            <a href="about.html">About&nbsp;Us</a>
+            <a href="contact.html">Contact&nbsp;Us</a>
+
+        </aside>
+        <!--topbar-->
+        <header id='topbar'>
+            <div id="topbar-logo">
+                <button id="topbar-btn" onclick="toggleSidebar()">
+                    <img src="./media/sidebar btn.png" id="topbar-logo">
+                </button>
+                <a href="index.html"><img src="media/logo.webp" id='topbar-logo'></a>
+            </div>
+            
+            <div id='topbar-nav'>
+                <a href="cart.html"><img src="media/cart.png"></a>
+                <a href="panel.html"><img src="media/user.png"></a>
+            </div>
+        </header>
+
+
+        <div id="main-content">
+            <!--store info bar-->
+            <div class="store-info">
+                <img id="store-image" alt="Store logo">
+
+                <div class="store-details">
+                    <h2 id="store-name"></h2>
+                </div>
+            </div>
+
+             <!--category and product Layout-->
+            <div class="container">
+                <!--category bar-->
+                <div class="catbar">
+                    <ul>
+                        <li>
+                            <button id="addProductBtn">Add Product</button>
+                        </li>
+                        <li>
+                            <button class="viewProducts" onclick="viewProducts()">View All Products</button>
+                        </li>
+                        <li>
+                            <button class="sales" onclick="salesRpt()">View Sales Report</button>
+                        </li>
+                    </ul>
+                </div>
+
+                <!--product display-->
+                <div class="prod-display" id="prod-display" style="display:flex;">
+                    <button onclick="openEditor(product)">Modify</button>
+
+                </div>
+
+                <!--product editor-->
+                <div id="editorSection" class="prod-editor"  style="display:none;">
+                    <h2>Edit Product</h2>
+
+                    <!--fields u can edit-->
+                    <label for="editor-name">Name:</label>
+                    <input id="editor-name" type="text" placeholder="Product Name">
+
+                    <label for="editor-price">Price:</label>
+                    <input id="editor-price" type="number" placeholder="Product Price">
+
+                    <label for="editor-image-input">Image:</label>
+                    <input type="file" id="editor-image-input" accept="image/*">
+
+                    <label for="preview">Image Preview: </label>
+                    <img id="preview" alt="Image preview" style="max-width:200px;">
+
+
+                    <!--save, cancel, delete button-->
+                    <button id="save-btn">Save</button>
+                    <button id="cancel-btn">Cancel</button>
+                    <button id="delete-btn">Delete</button>
+                
+                </div>
+
+                <!--sales report display-->
+                <div class="sales" id="sales-report" style="display:none;">
+                    <h2>3-Month Sales Report</h2>
+                    <table id="sales-table" style= "border: solid black 1px;" cellpadding="8">
+                        <thead>
+                        <tr>
+                            <th>Product Id</th>
+                            <th>Product Name</th>
+                            <th>December</th>
+                            <th>January</th>
+                            <th>February</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!-- rows injected by showSalesReport() -->
+                        </tbody>
+                    </table>
+                </div>
+
+
+            </div>
+        </div>
+       
+    </body>
+
+    <script> 
+        /*redirecting to the right site based on acc*/
+        if(typeof sessionType != "undefined"){
+            if(sessionType == "1"){
+                window.location.href = "shop_user.html";
+            } else if(sessionType != "2"){
+                window.location.href = "login.html";
+            }
+        }
+
+        /* displaying the correct store page */
+        document.addEventListener("DOMContentLoaded", () => {
+
+            /*declaring bcs openEditor() couldnt open*/
+            const editorSection = document.querySelector("#editorSection");
+            const prodDisplay = document.querySelector(".prod-display");
+            const nameField = editorSection?.querySelector("#editor-name");
+            const priceField = editorSection?.querySelector("#editor-price");
+            const imageField = editorSection?.querySelector("#editor-image");
+            const imageInput = editorSection?.querySelector("#editor-image-input");
+            const preview = editorSection?.querySelector("#preview");
+
+            /*declaring buttons bcs they wouldnt work*/
+            const saveBtn = editorSection.querySelector("#save-btn");
+            const cancelBtn = editorSection.querySelector("#cancel-btn");
+            const deleteBtn = editorSection.querySelector("#delete-btn");
+
+            if (imageInput) {
+                imageInput.addEventListener("change", (event) => {
+                    const file = event.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            preview.src = e.target.result; /*show preview*/
+                            currentProduct.image = e.target.result;
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+            
+
+            /*save button*/
+                if (saveBtn) {
+                    saveBtn.addEventListener("click", ()=> {
+                        console.log("Save clicked");
+
+                        const storeName = localStorage.getItem("selectedStoreId");
+                        const store = stores.find(s => s.name === storeName);
+                        if (!store || !currentProduct) return;
+
+                        /*update current product (works for both new and existing)*/
+                        if (nameField) currentProduct.name = nameField.value;
+                        if (priceField) currentProduct.price = priceField.value;
+                        
+                        saveStores(stores);
+
+                        /*Close editor*/
+                        editorSection.style.display = "none";
+                        prodDisplay.style.display = "flex";
+
+                        if (typeof window.onDataReady === "function") {
+                            window.onDataReady();
+                        }
+
+                    });
+                }
+
+            /*cancel button*/
+            if (cancelBtn) {
+                cancelBtn.addEventListener("click", () => {
+                    editorSection.style.display = "none";
+                    document.getElementById("prod-display").style.display = "flex";
+                });
+            }
+
+            let currentProduct = null; /*global tracker*/
+
+            function openEditor(productData) {
+                const nameField = editorSection.querySelector("#editor-name");
+                const priceField = editorSection.querySelector("#editor-price");
+                const imageField = editorSection.querySelector("#editor-image");
+                const preview = editorSection.querySelector("#preview");
+
+                editorSection.style.display = "block";
+                prodDisplay.style.display = "none";
+
+                currentProduct = productData; /*store reference*/
+
+                if (productData) {
+                    if (nameField) nameField.value = productData?.name || "";
+                    if (priceField) priceField.value = productData?.price || "";
+                    if (imageInput) imageInput.value = productData?.image || "";
+                    if (preview) preview.src = productData?.image || "";
+                } else {
+                    if (nameField) nameField.value = "";
+                    if (priceField) priceField.value = "";
+                    if (imageInput) imageInput.value = "";
+                    if (preview) preview.src = "";
+                }
+
+
+                /*delete button*/
+                if (deleteBtn) {
+                    deleteBtn.addEventListener("click", () => {
+                        console.log("Delete clicked");
+
+                        const storeId = parseInt(localStorage.getItem("selectedStoreId"), 10);
+                        const store = stores.find(s => s.id === storeId);
+
+                        if (store && store.Products) {
+                            /*remove product directly from array*/
+                            store.Products = store.Products.filter(p => p.id !== productData.id);
+                            console.log("Deleted product:", productData);
+                        }
+
+                        /*hide editor, display products*/
+                        editorSection.style.display = "none";
+                        prodDisplay.style.display = "flex";
+
+                        /*refresh product display if available*/
+                        if (typeof window.onDataReady === "function") window.onDataReady();
+                    });
+                }
+                
+            }
+
+            document.querySelectorAll(".modify-btn").forEach(btn => {
+                btn.addEventListener("click", () => {
+                    const productId = btn.dataset.productId;
+                    const storeId = parseInt(localStorage.getItem("selectedStoreId"), 10);
+                    const store = stores.find(s => s.id === storeId);
+                    const product = store.Products.find(p => p.id == productId);
+                    if (product) openEditor(product);
+                });
+            });
+
+
+            window.onDataReady = () => {
+                const storeName = localStorage.getItem("selectedStoreId");
+                if (storeName == null){
+                  console.log(storeName);
+                  alert("No store selected");
+                  return;
+                }
+
+                /* find store by id */
+                const store = stores.find(s => s.name === storeName);
+                console.log(store);
+                if (!store) {
+                  alert("Store not found!");
+                  return;
+                }
+
+                /* display store info */
+                document.getElementById("store-name").textContent = store.name;
+                document.getElementById("store-image").src = store.image;
+
+                /* render products */
+                const container = document.getElementById("prod-display");
+                container.innerHTML = "";
+
+                store.Products.forEach(product => {
+                    /* create link wrapper */
+                    const cardLink = document.createElement("a");
+
+                    /* build product card */
+                    const card = document.createElement("div");
+                    card.className = "product";
+                    card.innerHTML = `
+                        <img src="${product.image}">
+                        <div class="name">${product.name}</div>
+                        <div class="price">RM ${product.price}</div>
+                    `;
+
+                    /* create modify button */
+                    const modifyBtn = document.createElement("button");
+                    modifyBtn.className = "modify-btn";
+                    modifyBtn.textContent = "Modify";
+
+                    /* make the modify button work */
+                    modifyBtn.addEventListener("click", () => {
+                        openEditor(product); // product is already a real Product instance
+                    });
+
+                    /* append button to card */
+                    card.appendChild(modifyBtn);
+
+                    cardLink.appendChild(card);
+                    container.appendChild(cardLink);
+                });
+            };
+
+            /*add product feature*/
+            document.getElementById("addProductBtn").addEventListener("click", () => {
+                const storeId = parseInt(localStorage.getItem("selectedStoreId"), 10);
+                const store = stores.find(s => s.id === storeId);
+
+                if (!store) {
+                    alert("Store not found!");
+                    return;
+                }
+
+                /*find the product id with the highest number (for creating new product id*/
+                function getNextProductId(store) {
+                    if (store && store.Products && store.Products.length > 0) {
+                        const maxId = Math.max(...store.Products.map(p => p.id));
+                        return maxId + 1; /*new prod id = id with highest num + 1*/
+                    }
+                    return 1; // start at 1 if no products exist
+                }
+
+                /*create a new product object with default values*/
+                const newProduct = {
+                    id: getNextProductId(store),
+                    name: "",
+                    price: "",
+                    image: "",
+                    ratings: [],
+                    avgRating: 0
+                };
+
+                /*temporarily push it into the store so editor can work on it*/
+                store.Products.push(newProduct);
+
+                /*open editor with the new product*/
+                openEditor(newProduct);
+            });
+
+
+            initStores(); /* loads stores from IndexedDB */
+        });
+
+
+        function salesRpt(){
+            const prodDisplay = document.getElementById("prod-display");
+            const salesReport = document.getElementById("sales-report");
+            const salesTableBody = document.querySelector("#sales-table tbody");
+
+            if(prodDisplay.style.display != "none"){
+              /*hide product grid, show sales report*/
+              prodDisplay.style.display = "none";
+              salesReport.style.display = "block";
+
+              /*clear old rows*/
+              salesTableBody.innerHTML = "";
+
+              /*generates rows*/
+              const storeId = parseInt(localStorage.getItem("selectedStoreId"), 10);
+              const store = stores.find(s => s.id === storeId);
+
+              if (store && store.Products) {
+                  store.Products.forEach(product => {
+                      const row = document.createElement("tr");
+                      row.innerHTML = `
+                          <td>${product.id}</td>
+                          <td>${product.name}</td>
+                          <td>RM --</td>
+                          <td>RM --</td>
+                          <td>RM --</td>
+                      `;
+                      salesTableBody.appendChild(row);
+                  });
+              }
+            }else{
+              prodDisplay.style.display = "flex";
+              salesReport.style.display = "none";
+            }
+        }
+        function viewProducts() {
+            document.getElementById("sales-report").style.display = "none";
+            document.getElementById("prod-display").style.display = "flex"; // restore grid
+        }
+    </script>
+</html>
