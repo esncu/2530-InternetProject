@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="styles.css">
+        <title>Impian - Payment</title>
+        <style>
+            .payment-card{
+                max-width: 800px;
+                margin: 20px auto;
+                background: white;
+                border-radius: 20px;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+                border: 1px solid #e2e8f0;
+                overflow: hidden;
+            }
+
+            .payment-header{
+                padding: 20px 25px;
+                border-bottom: 1px solid #f1f5f9;
+            }
+
+            .payment-options{
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 15px;
+                padding: 25px;
+            }
+
+            .pay-option{
+                border: 2px solid #f1f5f9;
+                border-radius: 12px;
+                padding: 15px;
+                text-align: center;
+                position: relative;
+            }
+
+            .pay-option input[type="radio"] {
+                position: absolute;
+                opacity: 0;
+                width: 0;
+                height: 0;
+            }
+
+            .pay-option:hover{
+                border-color: #2563eb;
+                background: #f8faff;
+            }
+
+            .pay-option:has(input:checked) {
+                border-color: #2563eb;
+                background: #f0f7ff;
+            }
+
+            .pay-option img{
+                width: 50px;
+                height: 50px;
+                object-fit: contain;
+                margin-bottom: 10px;
+            }
+
+            .pay-option span{
+                display: block;
+                font-size: 13px;
+                font-weight: 600;
+                color: #333;
+            }
+
+            .card-details{
+                padding: 0 25px 25px 25px;
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .form-group{
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            label{
+                font-size: 13px;
+                font-weight: 600;
+                color: #444;
+            }
+
+            input{
+                padding: 10px;
+                border: 1px solid #e2e8f0;
+                border-radius: 8px;
+                font-size: 14px;
+            }
+
+            .row{
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 15px;
+            }
+
+            .payment-footer{
+                padding: 25px;
+                background: #fcfcfd;
+                border-top: 1px solid #f1f5f9;
+            }
+
+            .pay-now-btn{
+                width: 100%;
+                padding: 14px;
+                background: rgb(0, 143, 0); 
+                color: white;
+                border: none;
+                border-radius: 12px;
+                font-size: 14px;
+                font-weight: 700;
+                transition: 0.2s;
+            }
+
+            .pay-now-btn:hover{
+                opacity: 0.8;
+            }
+
+            .summary-mini{
+                text-align: center;
+                margin-bottom: 15px;
+                font-size: 14px;
+                color: #64748b;
+            }
+        </style>
+    </head>
+    <body>
+        <header id='topbar'>  
+            <p>Flash Sale: Up to 50% Off — Shop Now!   |   Free Shipping on Orders Above RM100   |   Weekend Special: Extra 15% Off Storewide Flash Sale: Up to 50% Off — Shop Now!   |   Free Shipping on Orders Above RM100   |   Weekend Special: Extra 15% Off Storewide Flash Sale: Up to 50% Off — Shop Now!</p> 
+        </header>
+
+        <aside id='sidebar'>
+            <a id="logo" href="index.html">
+                <img src="./media/logo.webp" alt="Logo" style="width: 120px;">
+            </a>
+            
+            <a href="customer-dashboard.html"><span>🏠</span>Dashboard</a>
+            <a href="shop.html"><span>🛍️</span>Start Shopping</a>
+            <a href="cart.html" class="active-link"><span>🛒</span>Your Cart</a>
+            <a href="comments.html"><span>💬</span>Comments</a>
+            <a href="services.html"><span>⚙️</span>Our Services</a>
+            <a href="about.html"><span>ℹ️</span>About Us</a>
+            <a href="contact.html"><span>📞</span>Contact Us</a>
+            
+            <a href="admin-login.html" class="logout-btn">Logout</a>
+        </aside>
+
+        <div id='main-content'>
+            <h1 style="text-align: center; color: #333;">Finalize Payment</h1>
+            <p style="text-align: center; color: #666; font-size: 14px; margin-bottom: 30px;">Choose your preferred payment method.</p>
+
+            <div class="payment-card">
+                <div class="payment-header">
+                    <h2 style="margin:0; font-size:16px;">Select Payment Method</h2>
+                </div>
+
+                <form id="payment-form">
+                    <div class="payment-options">
+                        <label class="pay-option">
+                            <input type="radio" name="pay-method" value="Mastercard" required>
+                            <img src="media/mastercard.png" alt="Credit Card">
+                            <span>Mastercard</span>
+                        </label>
+                        <label class="pay-option">
+                            <input type="radio" name="pay-method" value="Paypal">
+                            <img src="media/paypal.png" alt="Online Banking">
+                            <span>Paypal</span>
+                        </label>
+                        <label class="pay-option">
+                            <input type="radio" name="pay-method" value="Visa">
+                            <img src="media/visa.png" alt="E-Wallet">
+                            <span>Visa</span>
+                        </label>
+                    </div>
+
+                    <div class="card-details">
+                        <div class="form-group">
+                            <label>Cardholder Name</label>
+                            <input type="text" placeholder="John Doe" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Card Number</label>
+                            <input type="text" placeholder="1234 5678 9101 1121" maxlength="19" required>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="payment-footer">
+                    <div class="summary-mini">
+                        Amount to be charged : <strong style="font-size: 18px;">RM <span style="font-size: 18px;" id="final-amount">0</span></strong>
+                    </div>
+                    <button type="button" class="pay-now-btn" onclick="processPayment()">Complete Order</button>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function loadTotal(){
+                let cart = JSON.parse(localStorage.getItem('myCart')) || [];
+                let total = cart.reduce((sum, item) => sum + item.price, 0);
+                document.getElementById('final-amount').textContent = total;
+                
+                if(cart.length === 0){
+                    window.location.href = 'shop.html';
+                }
+            }
+
+            function processPayment(){
+                const form = document.getElementById('payment-form');
+                
+                if(form.checkValidity()){
+                    alert("Payment Successful! Your order has been placed successfully.");
+                    localStorage.removeItem('myCart');
+                    window.location.href = 'shop.html';
+                }
+                else{
+                    alert("Please select a payment method and fill in your details correctly.");
+                }
+            }
+
+            window.onload = loadTotal;
+        </script>
+    </body>
+</html>

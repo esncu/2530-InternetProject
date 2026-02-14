@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="styles.css">
+        <title>Impian - Comments / Rating</title>
+        <style>
+            .comment-container{
+                max-width: 700px;
+                margin: 0 auto;
+                padding: 20px;
+            }
+
+            .comment-form-card{
+                background: #ffffff;
+                border-radius: 24px;
+                box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+                padding: 25px;
+                margin-bottom: 30px;
+            }
+
+            .comment-form-card h2{
+                font-size: 14px;
+                margin-bottom: 15px;
+                color: #1e293b;
+            }
+
+            .form-group{
+                margin-bottom: 14px;
+            }
+
+            .form-group label{
+                display: block;
+                font-size: 14px;
+                margin-bottom: 5px;
+                color: #64748b;
+            }
+
+            .form-group input, .form-group textarea{
+                width: 100%;
+                padding: 10px;
+                border: 1px solid #e2e8f0;
+                border-radius: 10px;
+                font-size: 14px;
+                box-sizing: border-box;
+            }
+
+            .submit-comm-btn{
+                width: 100%;
+                padding: 14px;
+                background: #12151b;
+                color: white;
+                border: none;
+                border-radius: 14px;
+                font-weight: 700;
+                font-size: 14px;
+                transition: 0.2s;
+            }
+
+            .comment-list{
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .comment-item{
+                background: #f8fafc;
+                border-radius: 16px;
+                padding: 15px;
+                border-left: 4px solid #12151b;
+            }
+
+            .comment-header{
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 8px;
+            }
+
+            .user-name{ 
+                font-weight: 700; 
+                font-size: 14px; 
+                color: #1e293b; 
+            }
+
+            .comment-date{ 
+                font-size: 11px; 
+                color: #94a3b8; 
+            }
+
+            .comment-text{ 
+                font-size: 14px; 
+                color: #475569; 
+                line-height: 1.5; 
+            }
+
+            .stars{ 
+                color: #fbbf24; 
+                font-size: 14px; 
+            }
+        </style>
+    </head>
+    <body>
+        <header id='topbar'>  
+            <p>Flash Sale: Up to 50% Off — Shop Now!   |   Free Shipping on Orders Above RM100   |   Weekend Special: Extra 15% Off Storewide Flash Sale: Up to 50% Off — Shop Now!   |   Free Shipping on Orders Above RM100   |   Weekend Special: Extra 15% Off Storewide Flash Sale: Up to 50% Off — Shop Now!</p> 
+        </header>
+
+        <aside id='sidebar'>
+            <a id="logo" href="index.html">
+                <img src="./media/logo.webp" alt="Logo" style="width: 120px;">
+            </a>
+            
+            <a href="customer-dashboard.html"><span>🏠</span>Dashboard</a>
+            <a href="shop.html"><span>🛍️</span>Start Shopping</a>
+            <a href="cart.html"><span>🛒</span>Your Cart</a>
+            <a href="comments.html"  class="active-link"><span>💬</span>Comments</a>
+            <a href="services.html"><span>⚙️</span>Our Services</a>
+            <a href="about.html"><span>ℹ️</span>About Us</a>
+            <a href="contact.html"><span>📞</span>Contact Us</a>
+            
+            <a href="admin-login.html" class="logout-btn">Logout</a>
+        </aside>
+
+        <div id='main-content'>
+            <div>
+                <h1 style="color: #333; margin-bottom: 5px; text-align: center;">Share Your Thoughts</h1>
+                <p style="color: #666; margin-bottom: 30px; font-size: 14px; text-align: center;">Leave a comment and let us know your experience with us at iMPIAN.</p>
+            </div>
+            <div class="comment-container">
+                <div class="comment-form-card">
+                    <h2>Leave a Review</h2>
+                    <form id="commentForm">
+                        <div class="form-group">
+                            <label>Your Name</label>
+                            <input type="text" id="userName" placeholder="Enter your name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Rating</label>
+                            <select id="userRating" style="width:100%; padding:10px; border-radius:10px; font-size:14px; border:1px solid #e2e8f0;">
+                                <option style="font-size: 14px;" value="5">★★★★★ (5/5)</option>
+                                <option style="font-size: 14px;" value="4">★★★★☆ (4/5)</option>
+                                <option style="font-size: 14px;" value="3">★★★☆☆ (3/5)</option>
+                                <option style="font-size: 14px;" value="2">★★☆☆☆ (2/5)</option>
+                                <option style="font-size: 14px;" value="1">★☆☆☆☆ (1/5)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Comment</label>
+                            <textarea id="commentBody" rows="3" placeholder="Tell us about your experience..." required></textarea>
+                        </div>
+                        <button type="submit" class="submit-comm-btn">Post Comment</button>
+                    </form>
+                </div>
+                <div class="comment-list" id="commentList"></div>
+            </div>
+        </div>
+
+        <script>
+            const defaultComments = [
+                { user: "Sarah Lim", rating: 4, text: "Delivery was fast. The wireless mouse fits perfectly in my hand, though I wish there were more color options.", date: "12/02/2026" },
+                { user: "Rishi K.", rating: 5, text: "Excellent customer service. Had a small issue with my order and they fixed it immediately.", date: "13/02/2026" },
+                { user: "Adam Z.", rating: 5, text: "Easy Navigation. Very clear, intuitive and smooth flow.", date: "13/02/2026" },
+                { user: "Rishi K.", rating: 4, text: "The headset is wonderful! So noise cancelling that i couldnt hear my mom calling me.", date: "13/02/2026" },
+                { user: "Divyaa D.", rating: 5, text: "Excellent customer service. Had a small issue with my order and they fixed it immediately. Highly recommended!", date: "10/02/2026" },
+
+            ];
+
+            function displayComments(){
+                let comments = JSON.parse(localStorage.getItem('allComments'));
+                
+                if(!comments || comments.length === 0){
+                    comments = defaultComments;
+                    localStorage.setItem('allComments', JSON.stringify(comments));
+                }
+
+                const list = document.getElementById('commentList');
+                
+                list.innerHTML = [...comments].reverse().map(c => `
+                    <div class="comment-item">
+                        <div class="comment-header">
+                            <span class="user-name">${c.user} <span class="stars">${'★'.repeat(c.rating)}${'☆'.repeat(5-c.rating)}</span></span>
+                            <span class="comment-date">${c.date}</span>
+                        </div>
+                        <p class="comment-text">${c.text}</p>
+                    </div>
+                `).join('');
+            }
+
+            document.getElementById('commentForm').onsubmit = function(e){
+                e.preventDefault();
+                
+                const newComment = {
+                    user: document.getElementById('userName').value,
+                    rating: parseInt(document.getElementById('userRating').value),
+                    text: document.getElementById('commentBody').value,
+                    date: new Date().toLocaleDateString()
+                };
+
+                const comments = JSON.parse(localStorage.getItem('allComments')) || [];
+                comments.push(newComment);
+                localStorage.setItem('allComments', JSON.stringify(comments));
+
+                this.reset();
+                displayComments();
+            };
+
+            window.onload = displayComments;
+        </script>
+    </body>
+</html>

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="styles.css">
+        <title>Admin - Services Management</title>
+        <style>
+            #main-content{
+                text-align: center;
+                padding: 40px;
+            }
+
+            .table-wrapper{
+                max-width: 1000px;
+                margin: 0 auto;
+            }
+
+            table{
+                width: 100%;
+                border-spacing: 0 12px; 
+                text-align: left;
+            }
+
+            tr.service-row{
+                background: white;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            }
+
+            td{
+                padding: 20px 25px;
+                color: #444;
+                vertical-align: middle;
+                border-top: 1px solid #eee;
+                border-bottom: 1px solid #eee;
+                border-left: 1px solid #2e7d32;
+            }
+
+            .service-title{
+                font-weight: 700;
+                color: #2e7d32;
+                font-size: 15px;
+                display: block;
+                margin-bottom: 4px;
+            }
+
+            .service-desc{
+                font-size: 13px;
+                color: #777;
+            }
+
+            .edit-input{
+                width: 100%;
+                padding: 8px 12px;
+                border: 1.5px solid #2e7d32;
+                border-radius: 6px;
+                font-size: 13px;
+                margin-bottom: 5px;
+                box-sizing: border-box;
+                resize: none;
+            }
+
+            .action-btn{
+                padding: 7px 14px;
+                border: none;
+                border-radius: 6px;
+                font-weight: bold;
+                font-size: 10px;
+                transition: 0.2s;
+            }
+
+            .edit-btn{
+                background: #e8f5e9;
+                color: #2e7d32;
+                margin-right: 20px;
+            }
+
+            .edit-btn:hover{
+                background: #2e7d32;
+                color: white;
+            }
+
+            .delete-btn{
+                background: #fff1f0;
+                color: #cf1322;
+                margin-right: 20px;
+            }
+
+            .delete-btn:hover{
+                background: #cf1322;
+                color: white;
+            }
+
+            .save-btn{
+                background: #2e7d32;
+                color: white;
+                width: 100%;
+            }
+
+            .add-btn-container{
+                max-width: 800px;
+                margin: 10px auto;
+                text-align: center;
+            }
+
+            .add-new-btn{
+                background: white;
+                color: #2e7d32;
+                padding: 12px 30px;
+                border-radius: 30px;
+                font-weight: bold;
+                font-size: 15px;
+                border: 2px solid #2e7d32;
+                transition: 0.3s;
+            }
+
+            .add-new-btn:hover{
+                background: #2e7d32;
+                color: white;
+            }
+        </style>
+    </head>
+    <body>
+        <header id='topbar'>  
+            <p>System Status: All Systems Operational | Admin Session Active | Last Login: Today, 09:15 AM | 232 Users Online | Revenue increased 12% this week | Please give A+ Madam | Low Stock Items : 5 | System Status: All Systems Operational | Admin Session Active | Last Login: Today, 09:15 AM | 232 Users Online</p> 
+        </header>
+
+        <aside id='sidebar'>
+            <a id="logo" href="index.html">
+                <img src="./media/logo.webp" alt="Logo" style="width: 120px;">
+            </a>
+            
+            <a href="admin-dashboard.html"><span>🏠</span>Dashboard</a>
+            <a href="members.html"><span>➕</span>Manage Members</a>
+            <a href="staff.html"><span>👤</span>Manage Staff</a>
+            <a href="manage-products.html"><span>🏪</span>Manage Products</a>
+            <a href="manage-services.html" class="active-link"><span>⚙️</span>Manage Services</a>
+            <a href="bookings.html"><span>🖥️</span>Manage Bookings</a>
+            <a href="sales-report.html"><span>💯</span>Sales Report</a>
+            
+            <a href="admin-login.html" class="logout-btn">Logout</a>
+        </aside>
+
+        <div id='main-content'>
+            <div>
+                <h1 style="color: #333; margin-bottom: 5px; margin-top: 10px;">Services Management</h1>
+                <p style="color: #666; margin-bottom: 30px; font-size: 14px;">Define the core tools and fulfillment features that power the iMPIAN.MY experience.</p>
+            </div>
+
+            <div class="add-btn-container">
+                <button class="add-new-btn" onclick="addNewService()">+ Add New Service</button>
+            </div>
+
+            <div class="table-wrapper">
+                <table>
+                    <tbody id="services-list"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <script>
+            let servicesData = [
+                { title: "Multi-vendor Management", desc: "Core tools for storefronts, integrated payment gateways (FPX & E-wallets), and automated inventory syncing." },
+                { title: "Verification & QA", desc: "Multi-point quality assurance verification ensures all products meet iMPIAN premium standards." },
+                { title: "Smart Logistics", desc: "AI-routed local delivery systems and sustainable eco-packing materials for safe handover." },
+                { title: "Safe Checkout", desc: "Smooth process with secure payment options giving peace of mind while making purchases quick." },
+                { title: "Dedicated Support", desc: "Expert teams ready to assist, providing clear answers and resolving issues promptly." },
+                { title: "Community Growth", desc: "Every purchase supports local Malaysian businesses, valuing tradition and shared growth." }
+            ];
+
+            const listBody = document.getElementById('services-list');
+
+            function renderTable(){
+                listBody.innerHTML = "";
+                servicesData.forEach((service, index) => {
+                    const row = document.createElement('tr');
+                    row.className = "service-row";
+                    row.innerHTML = `
+                        <td>
+                            <span class="service-title">${service.title}</span>
+                        </td>
+                        <td>
+                            <span class="service-desc">${service.desc}</span>
+                        </td>
+                        <td style="text-align: right;">
+                            <button class="action-btn edit-btn" onclick="startEdit(${index})">UPDATE</button>
+                            <button class="action-btn delete-btn" onclick="deleteService(${index})">DELETE</button>
+                        </td>
+                    `;
+                    listBody.appendChild(row);
+                });
+            }
+
+            function startEdit(index){
+                const service = servicesData[index];
+                const rows = listBody.getElementsByTagName('tr');
+                const targetRow = rows[index];
+
+                targetRow.innerHTML = `
+                    <td><input type="text" id="editTitle-${index}" class="edit-input" value="${service.title}"></td>
+                    <td><textarea id="editDesc-${index}" class="edit-input" style="height: 60px; font-family: sans-serif;">${service.desc}</textarea></td>
+                    <td style="text-align: right;">
+                        <button class="action-btn save-btn" onclick="saveEdit(${index})">CONFIRM CHANGES</button>
+                    </td>
+                `;
+            }
+
+            function saveEdit(index){
+                const title = document.getElementById(`editTitle-${index}`).value;
+                const desc = document.getElementById(`editDesc-${index}`).value;
+
+                if(title && desc) {
+                    servicesData[index] = { title, desc };
+                    renderTable();
+                } else {
+                    alert("Please provide both a title and description.");
+                }
+            }
+
+            function deleteService(index){
+                if(confirm(`Remove "${servicesData[index].title}" from public services?`)) {
+                    servicesData.splice(index, 1);
+                    renderTable();
+                }
+            }
+
+            function addNewService(){
+                const newService = { title: "New Service Title", desc: "Provide service details here..." };
+                servicesData.unshift(newService);
+                renderTable();
+                startEdit(0); 
+            }
+
+            document.addEventListener("DOMContentLoaded", renderTable);
+        </script>
+    </body>
+</html>

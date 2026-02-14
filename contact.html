@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="styles.css">
+        <title>iMPIAN - Contact Us</title>
+        <style>   
+            .contact-container{
+                display: flex;
+                gap: 40px;
+                background: white;
+                padding: 50px;
+                border-radius: 15px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+                max-width: 1100px;
+                margin: 0 auto;
+            }
+
+            .contact-info{
+                flex: 1;
+            }
+
+            .contact-info h2{
+                color: #2e7d32;
+                margin-bottom: 15px;
+                font-size: 25px;
+            }
+
+            .contact-info p{
+                color: #666;
+                line-height: 1.6;
+                margin-bottom: 20px;
+                font-size: 15px;
+            }
+
+            .info-details p{
+                margin-bottom: 10px;
+                color: #333;
+                font-size: 15px;
+            }
+
+            .map{
+                margin-top: 25px;
+                border: 1px solid #ddd;
+                border-radius: 10px;
+                overflow: hidden;
+            }
+
+            .contact-form{
+                flex: 1;
+                background: #f9fbf9;
+                padding: 30px;
+                border-radius: 12px;
+                border: 1px solid #e8eee8;
+            }
+
+            .form-group{
+                margin-bottom: 20px;
+            }
+
+            .form-group label{
+                display: block;
+                margin-bottom: 8px;
+                font-weight: 600;
+                color: #333;
+                font-size: 15px;
+            }
+
+            .form-group input, .form-group select, .form-group textarea{
+                width: 95%;
+                padding: 12px;
+                border: 1px solid #ccc;
+                border-radius: 8px;
+                font-size: 15px;
+            }
+
+            .form-group input:focus, .form-group textarea:focus {
+                border-color: #2e7d32;
+                outline: none;
+                box-shadow: 0 0 5px rgba(46, 125, 50, 0.2);
+            }
+
+            .submit-btn{
+                width: 100%;
+                background-color: #2e7d32;
+                color: white;
+                padding: 14px;
+                border: none;
+                border-radius: 8px;
+                font-size: 15px;
+                font-weight: bold;
+                transition: 0.3s ease;
+            }
+
+            .submit-btn:hover{
+                background-color: #1b9924;
+            }
+        </style>
+    </head>
+    <body>
+        <header id='topbar'>  
+            <p>Flash Sale: Up to 50% Off — Shop Now!   |   Free Shipping on Orders Above RM100   |   Weekend Special: Extra 15% Off Storewide Flash Sale: Up to 50% Off — Shop Now!   |   Free Shipping on Orders Above RM100   |   Weekend Special: Extra 15% Off Storewide Flash Sale: Up to 50% Off — Shop Now!</p> 
+        </header>
+
+        <aside id='sidebar'>
+            <a id="logo" href="index.html">
+                <img src="./media/logo.webp" alt="Logo" style="width: 120px;">
+            </a>
+            
+            <a href="customer-dashboard.html"><span>🏠</span>Dashboard</a>
+            <a href="shop.html"><span>🛍️</span>Start Shopping</a>
+            <a href="cart.html"><span>🛒</span>Your Cart</a>
+            <a href="comments.html"><span>💬</span>Comments</a>
+            <a href="services.html"><span>⚙️</span>Our Services</a>
+            <a href="about.html"><span>ℹ️</span>About Us</a>
+            <a href="contact.html" class="active-link"><span>📞</span>Contact Us</a>
+            
+            <a href="admin-login.html" class="logout-btn">Logout</a>
+        </aside>
+
+        <div id='main-content'>    
+            <div class="contact-container">
+                <div class="contact-info">
+                    <h2>Contact Us</h2>
+                    <p>Have questions about your shop or need technical support? Our team is here to help you turn your business "Impian" into reality.</p>
+                    
+                    <div class="info-details">
+                        <p>📍 <b style="font-size: 15px;">HQ</b> : Level 39, Menara iMPIAN, Kuala Lumpur</p>
+                        <p>📞 <b style="font-size: 15px;">Support</b> +60 3-1234 5678</p>
+                        <p>✉️ <b style="font-size: 15px;">Email</b> support@impian.my</p>
+                    </div>
+
+                    <div class="map">
+                        <iframe style="border: none;" width="100%" height="250" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d127482.41721590124!2d101.60421257321592!3d3.1385035542289417!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31cc362abd07e359%3A0x232e1ff20023a45c!2sKuala%20Lumpur%2C%20Federal%20Territory%20of%20Kuala%20Lumpur!5e0!3m2!1sen!2smy!4v1707660000000!5m2!1sen!2smy"></iframe>
+                    </div>
+                </div>
+
+                <div class="contact-form">
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <label>Full Name</label>
+                            <input type="text" placeholder="Enter your name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Email Address</label>
+                            <input type="email" placeholder="email@example.com" required>
+                        </div>
+                        <div class="form-group" style="width: 100%;">
+                            <label>Subject</label>
+                            <select>
+                                <option style="font-size: 15px;">Technical Support</option>
+                                <option style="font-size: 15px;">Sales Inquiry</option>
+                                <option style="font-size: 15px;">Billing Issue</option>
+                                <option style="font-size: 15px;">General Feedback</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Message</label>
+                            <textarea rows="5" placeholder="How can we help you today?" required></textarea>
+                        </div>
+                        <button type="submit" class="submit-btn">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            const form = document.getElementById("contactForm");
+            form.addEventListener("submit", (event) => {
+                alert("Thanks for reaching out to us! We will get back to you soon.");
+            });
+        </script>
+    </body>
+</html>

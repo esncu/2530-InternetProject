@@ -1,211 +1,212 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <link rel="stylesheet" href="styles.css">
-    <script src='session.js'></script>
-    <script src="data.js"></script>
-    <title>Impian - Checkout</title>
-    <style>
-      /* reset styles.css */
-      #main-content{
-        padding: 52px 0 0 0;
-      }
-      body{
-        display: inline;
-        background-color: var(--bg-color);
-        height: 100vh;
-      }
-      /* reset styles.css */
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="styles.css">
+        <title>Impian - Checkout</title>
+        <style>
+            .checkout-card{
+                max-width: 800px;
+                margin: 20px auto;
+                background: white;
+                border-radius: 20px;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+                border: 1px solid #e2e8f0;
+                overflow: hidden;
+                display: flex;
+                flex-direction: column;
+            }
 
-      #main-content{
-        display: grid;
-        grid-template-columns: 3fr 2fr;
-        gap: 10px;
-        padding: 70px 10px 10px 10px;
-        height: 100vh;
-      }
-      #shippingDetailsDiv{
-        background-color: var(--fg-color);
-        height: 100%;
-      }
-      #shippingDetailsDiv textarea{
-        width: 90%;
-        resize: none;
-      }
-      #shippingDetailsDiv img{
-        height: 100%;
-      }
-      #orderDetailsDiv{
-        background-color: var(--bg-color);
-        height: 100%;
-        text-align: center;
-      }
-      #fg-div{
-        background-color: var(--fg-color);
-        margin-bottom: 10px;
-        padding: 10px 0 10px 0;
-        padding-inline: 10px;
-      }
-      .paymentMethodsDiv{
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
-        gap: 10px;
-        height: 100px;
-      }
-      .radioContainer{
-        border: 1px solid black;
-        display: grid;
-        grid-template-rows: auto auto;
-        place-items: center;
-      }
-      #checkoutBtn{
-        width: 100%;
-        background-color: var(--sec-color);
-        border: none;
-        border-radius: 10px;
-        font-size: 50px;
-      }
-      #priceLabel{
-        text-align: left;
-      }
-      #cartDivHead{
-        background-color: var(--tg-color);
-      }
-      #cartDiv{
-        background-color: var(--fg-color);
-      }
-    .cartItemDiv{
-      display: grid;
-      grid-template-columns: auto auto;
-      grid-template-areas:
-        "A B E"
-        "A C E"
-        "D D E";
-      margin: 0 0 10px 0;
-      text-align: left;
-    }
-    .cartItemImg{
-      grid-area: A;
-      width: 100px;
-    }
-    .cartItemName{
-      grid-area: B;
-      text-overflow: ellipsis;
-      width: 100%;
-      font-weight: bold;
-    }
-    .cartItemPrice{
-      grid-area: C;
-      width: 100%;
-    }
-    .cartItemQuan{
-      grid-area: E;
-      width: 100%;
-      font-weight: bold;
-      text-align: right;
-      margin: auto 0 auto 0;
-    }
-    hr{
-      grid-area: D;
-      margin: auto;
-      margin-top: 10px;
-      width: 50%;
-      border: 5px solid var(--tg-color);
-      border-radius: 3px;
-    }
-    </style>
-  </head>
+            .checkout-header{
+                padding: 20px 25px;
+                border-bottom: 1px solid #f1f5f9;
+            }
 
+            h2{
+                margin: 0;
+                font-size: 16px;
+                font-weight: 700;
+            }
 
-  <body>
-    <header id='topbar'>
-      <a href="index.html"><img src="./media/logo.webp" id='topbar-logo'></a>
-      <div id='topbar-nav'>
-        <a href="cart.html"><img src="./media/cart.png"></a>
-        <a href="panel.html"><img src="./media/user.png"></a>
-      </div>
-    </header>
+            .form-content{
+                padding: 25px;
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+            }
 
-    <form id='main-content'>
-      <div id='shippingDetailsDiv'>
-        <h2>Address:</h2>
-        <textarea rows="5" name='address'>
-Ali Bin Charli
-67, Jalan Sigmand, Bandar Taman 1
-50450 Kuala Lumpur
-Malaysia
-</textarea><br><br>
-        <h2>Payment Method:</h2>
-        <div class='paymentMethodsDiv'>
-          <div class='radioContainer'>
-            <img src="./media/paypal.png"><br>
-            <input type="radio" name="paymentMethod" value="paypal" checked>
-          </div>
-          <div class='radioContainer'>
-            <img src="./media/mastercard.png"><br>
-            <input type="radio" name="paymentMethod" value="mastercard">
-          </div>
-          <div class='radioContainer'>
-            <img src="./media/visa.png"><br>
-            <input type="radio" name="paymentMethod" value="visa">
-          </div>
+            .form-group{
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            label{
+                font-size: 13px;
+                font-weight: 600;
+                color: #444;
+            }
+
+            input, select, textarea{
+                padding: 10px;
+                border: 1px solid #e2e8f0;
+                border-radius: 8px;
+                font-size: 14px;
+            }
+
+            input:focus, select:focus, textarea:focus{
+                outline: none;
+                border-color: #2563eb;
+            }
+
+            .row{
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 15px;
+            }
+
+            .checkout-footer{
+                padding: 25px;
+                background: #fcfcfd;
+                border-top: 1px solid #f1f5f9;
+            }
+
+            .summary-line{
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 20px;
+            }
+
+            .summary-label{ 
+                color: #64748b; 
+                font-weight: 600; 
+                font-size: 13px;
+                letter-spacing: 0.5px;
+            }
+            
+            .summary-total{ 
+                font-size: 18px; 
+                font-weight: 800; 
+            }
+
+            .payment-btn{
+                width: 100%;
+                padding: 14px;
+                background: rgb(27, 27, 27);
+                color: white;
+                border: none;
+                border-radius: 12px;
+                font-size: 14px;
+                font-weight: 700;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                transition: 0.2s;
+                text-align: center;
+                display: block;
+            }
+
+            .payment-btn:hover{ 
+                opacity: 0.8; 
+            }
+        </style>
+    </head>
+    <body>
+        <header id='topbar'>  
+            <p>Flash Sale: Up to 50% Off — Shop Now!   |   Free Shipping on Orders Above RM100   |   Weekend Special: Extra 15% Off Storewide Flash Sale: Up to 50% Off — Shop Now!   |   Free Shipping on Orders Above RM100   |   Weekend Special: Extra 15% Off Storewide Flash Sale: Up to 50% Off — Shop Now!</p> 
+        </header>
+
+        <aside id='sidebar'>
+            <a id="logo" href="index.html">
+                <img src="./media/logo.webp" alt="Logo" style="width: 120px;">
+            </a>
+            
+            <a href="customer-dashboard.html"><span>🏠</span>Dashboard</a>
+            <a href="shop.html"><span>🛍️</span>Start Shopping</a>
+            <a href="cart.html" class="active-link"><span>🛒</span>Your Cart</a>
+            <a href="comments.html"><span>💬</span>Comments</a>
+            <a href="services.html"><span>⚙️</span>Our Services</a>
+            <a href="about.html"><span>ℹ️</span>About Us</a>
+            <a href="contact.html"><span>📞</span>Contact Us</a>
+            
+            <a href="admin-login.html" class="logout-btn">Logout</a>
+        </aside>
+
+        <div id='main-content'>
+            <div>
+                <h1 style="color: #333; margin-bottom: 5px; text-align: center;">Your Checkout Form</h1>
+                <p style="color: #666; margin-bottom: 30px; font-size: 14px; text-align: center;">Please provide your shipping details to complete the order.</p>
+            </div>
+
+            <div class="checkout-card">
+                <div class="checkout-header">
+                    <h2>Shipping Address Details</h2>
+                </div>
+
+                <form class="form-content" id="checkout-form">
+                    <div class="form-group">
+                        <label>Street Address</label>
+                        <input type="text" placeholder="Enter your full address" required>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group">
+                            <label>City</label>
+                            <input type="text" placeholder="City" required>
+                        </div>
+                        <div class="form-group">
+                            <label>State/Region</label>
+                            <input type="text" placeholder="State" required>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group">
+                            <label>Postal Code</label>
+                            <input type="text" placeholder="e.g: 47100" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Shipping Option</label>
+                            <select required>
+                                <option style="font-size: 14px;" value="standard">Standard Shipping (3-5 Days)</option>
+                                <option style="font-size: 14px;" value="express">Express Shipping (1-2 Days)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Special Instructions (Optional)</label>
+                        <textarea rows="3" placeholder="Leave a note for the courier..."></textarea>
+                    </div>
+                </form>
+
+                <div class="checkout-footer">
+                    <div class="summary-line">
+                        <span class="summary-label">TOTAL TO PAY</span>
+                        <span class="summary-total">RM <span id="checkout-total">0</span></span>
+                    </div>
+                    <button type="button" class="payment-btn" onclick="goToPayment()">Continue to Payment</button>
+                </div>
+            </div>
         </div>
-      </div>
 
-      <div id='orderDetailsDiv'>
-        <div id='fg-div'>
-          <input type='button' id='checkoutBtn' value='Checkout'>
-          <h2 id='priceLabel'>Total Price: RM XX.XX</h2>
-        </div>
+        <script>
+            function loadCheckoutTotal(){
+                let cart = JSON.parse(localStorage.getItem('myCart')) || [];
+                let total = cart.reduce((sum, item) => sum + item.price, 0);
+                document.getElementById('checkout-total').textContent = total;
+            }
 
-        <div id='cartDiv'>
-          <h2 id='cartDivHead'>Items in the Order (X)</h2>
-        </div>
-      </div>
-    </form>
-  </body>
-  <script>
-    const cart = JSON.parse(localStorage.getItem("cart")) || [];
-    const cartDiv = document.getElementById('cartDiv');
-    const form = document.getElementById('main-content');
+            function goToPayment(){
+                const form = document.getElementById('checkout-form');
+                if(form.checkValidity()){
+                    window.location.href = 'payment.html';
+                }
+                else{
+                    alert("Please fill in all required shipping fields.");
+                }
+            }
 
-    let totalPrice = 0, totalItems=0;
-    document.addEventListener("DOMContentLoaded",()=>{window.onDataReady = () => {
-      cart.forEach((cartItem) => {
-        let ciDiv = document.createElement('div');
-        let img = document.createElement('img');
-        let name = document.createElement('p');
-        let price = document.createElement('p');
-        let quan = document.createElement('p');
-        ciDiv.className='cartItemDiv';
-        img.className='cartItemImg';
-        name.className='cartItemName';
-        price.className='cartItemPrice';
-        quan.className='cartItemQuan';
-
-        img.src = cartItem.image;
-        name.textContent = cartItem.name;
-        price.textContent = 'RM '+cartItem.price.toFixed(2);
-        quan.textContent = 'x'+ cartItem.quantity;
-
-        ciDiv.append(img);
-        ciDiv.append(name);
-        ciDiv.append(price);
-        ciDiv.append(quan);
-        ciDiv.append(document.createElement('hr'));
-
-        totalPrice+=cartItem.price * cartItem.quantity;
-        totalItems+=cartItem.quantity;
-
-        cartDiv.append(ciDiv);
-      })
-      document.getElementById('priceLabel').textContent = 'Total Price: RM '+totalPrice.toFixed(2);
-      document.getElementById('cartDivHead').textContent = 'Items in the Order ('+totalItems+')';
-    }});
-    document.getElementById('checkoutBtn').addEventListener('click', ()=>{
-      form.action='confirm.html';
-      form.submit();
-    });
-  </script>
+            window.onload = loadCheckoutTotal;
+        </script>
+    </body>
 </html>

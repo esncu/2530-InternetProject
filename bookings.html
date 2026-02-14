@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="styles.css">
+        <title>Admin - Order Management</title>
+        <style>
+            #main-content{
+                text-align: center;
+            }
+
+            .table-wrapper{
+                background: white;
+                border-radius: 12px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+                max-width: 1100px;
+                margin: 0 auto;
+                border: 1px solid #eee;
+                overflow: hidden; 
+            }
+
+            table{
+                width: 100%;
+                border-collapse: collapse;
+                text-align: left;
+                display: flex;
+                flex-direction: column;
+            }
+
+            tr{
+                display: table;
+                width: 100%;
+                table-layout: fixed;
+                border-bottom: 1px solid #eee;
+            }
+
+            tbody{
+                display: block;
+                max-height: 350px; 
+                overflow-y: auto;
+                width: 100%;
+            }
+
+            th{
+                background: #fdfdfd;
+                color: #2e7d32;
+                font-weight: 700;
+                padding: 15px 20px;
+                font-size: 11px;
+            }
+
+            td{
+                padding: 15px 20px;
+                color: #444;
+                font-size: 14px;
+            }
+
+            tr:hover{
+                background-color: #f9fdf9;
+            }
+
+            .status-select{
+                padding: 5px 10px;
+                border-radius: 6px;
+                border: 1px solid #ddd;
+                font-size: 12px;
+                font-weight: 600;
+                outline: none;
+            }
+
+            .status-pending{
+                color: #f57c00;
+                background: #fff3e0;
+                border-color: #ffe0b2;
+            }
+
+            .status-shipped{
+                color: #1976d2;
+                background: #e3f2fd;
+                border-color: #bbdefb;
+            }
+
+            .status-delivered{
+                color: #388e3c;
+                background: #e8f5e9;
+                border-color: #c8e6c9;
+            }
+
+            .status-cancelled{
+                color: #d32f2f;
+                background: #ffebee;
+                border-color: #ffcdd2;
+            }
+
+            .action-btn{
+                padding: 6px 12px;
+                border: none;
+                border-radius: 6px;
+                font-weight: 600;
+                font-size: 11px;
+                transition: 0.2s;
+            }
+
+            .delete-btn{
+                background: #ffebee;
+                color: #d32f2f;
+            }
+
+            .delete-btn:hover{
+                background: #d32f2f;
+                color: white;
+            }
+
+            .order-id{
+                font-family: monospace;
+                font-weight: bold;
+                color: #2e7d32;
+            }
+
+            .add-order-row{
+                background-color: #f1f8e9;
+            }
+
+            .add-input{
+                width: 90%;
+                padding: 4px 8px;
+                border: 1px solid #2e7d32;
+                border-radius: 4px;
+                font-size: 12px;
+            }
+
+            .save-btn{
+                background: #2e7d32;
+                color: white;
+            }
+        </style>
+    </head>
+    <body>
+        <header id='topbar'>  
+            <p>System Status: All Systems Operational | Admin Session Active | Last Login: Today, 09:15 AM | 232 Users Online | Revenue increased 12% this week | Please give A+ Madam | Low Stock Items : 5 | System Status: All Systems Operational | Admin Session Active | Last Login: Today, 09:15 AM | 232 Users Online</p> 
+        </header>
+
+        <aside id='sidebar'>
+            <a id="logo" href="index.html">
+                <img src="./media/logo.webp" alt="Logo" style="width: 120px;">
+            </a>
+            
+            <a href="admin-dashboard.html"><span>🏠</span>Dashboard</a>
+            <a href="members.html"><span>➕</span>Manage Members</a>
+            <a href="staff.html"><span>👤</span>Manage Staff</a>
+            <a href="manage-products.html"><span>🏪</span>Manage Products</a>
+            <a href="manage-services.html"><span>⚙️</span>Manage Services</a>
+            <a href="bookings.html" class="active-link"><span>🖥️</span>Manage Bookings</a>
+            <a href="sales-report.html"><span>💯</span>Sales Report</a>
+            
+            <a href="admin-login.html" class="logout-btn">Logout</a>
+        </aside>
+
+        <div id='main-content'>
+            <div>
+                <h1 style="color: #333; margin-bottom: 5px; margin-top: 10px;">Booking & Order Management</h1>
+                <p style="color: #666; margin-bottom: 30px; font-size: 14px;">Track customer purchases, update order status, and view transaction records.</p>
+            </div>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ORDER ID</th>
+                            <th>STORE</th>
+                            <th>PRODUCT NAME</th>
+                            <th>QTY</th>
+                            <th>TOTAL</th>
+                            <th>EDIT STATUS</th>
+                            <th style="text-align: center;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bookings-list"></tbody>
+                </table>
+            </div>
+
+            <div style="max-width: 1100px; margin: 0 auto 15px auto; text-align: right; margin-top: 20px;">
+                <button class="action-btn" style="background: #2e7d32; color: white; padding: 10px 20px;" onclick="addNewOrderRow()">+ CREATE NEW ORDER</button>
+            </div>
+        </div>
+
+        <script>
+            let bookingsData = [
+                { id: "ORD-9920", store: "Dd Hair", pName: "Curling Gel + Mousse", qty: 1, total: "RM 85.99", status: "Cancelled" },
+                { id: "ORD-9921", store: "Aisya's Boutique", pName: "Baju Kurung Modern", qty: 1, total: "RM 120.00", status: "Shipped" },
+                { id: "ORD-9922", store: "Thanu's Spices", pName: "Serbuk Bunga Cengkih", qty: 3, total: "RM 9.30", status: "Pending" },
+                { id: "ORD-9923", store: "Mindy Tech", pName: "Wireless Earbuds", qty: 2, total: "RM 300.00", status: "Shipped" },
+                { id: "ORD-9924", store: "Easons Home & Co.", pName: "Fluffy Pillow Set", qty: 2, total: "RM 145.00", status: "Delivered" },
+                { id: "ORD-9925", store: "Kika Cosmetics", pName: "Matte Lipstick (Red)", qty: 1, total: "RM 35.00", status: "Cancelled" },
+                { id: "ORD-9926", store: "Puteri Wellness", pName: "Soothe & Calming Tea", qty: 4, total: "RM 90.50", status: "Delivered" },
+                { id: "ORD-9924", store: "Easons Home & Co.", pName: "6 Mug Set", qty: 1, total: "RM 35.00", status: "Pending" },
+                { id: "ORD-9925", store: "Kika Cosmetics", pName: "Waterproof Mascara (Black)", qty: 1, total: "RM 35.00", status: "Shipped" },
+                { id: "ORD-9926", store: "Puteri Wellness", pName: "Detox Slimming Tea", qty: 1, total: "RM 20.50", status: "Delivered" },
+            ];
+
+            const tableBody = document.getElementById('bookings-list');
+
+            function renderBookings(){
+                tableBody.innerHTML = "";
+                bookingsData.forEach((order, index) => {
+                    const row = document.createElement('tr');
+                    let statusClass = "status-" + order.status.toLowerCase();
+
+                    row.innerHTML = `
+                        <td><span class="order-id" style="font-size:17px;">${order.id}</span></td>
+                        <td>${order.store}</td>
+                        <td><div style="font-size:13px; font-weight:600">${order.pName}</div></td>
+                        <td>${order.qty}</td>
+                        <td style="font-weight:bold">${order.total}</td>
+                        <td>
+                            <select class="status-select ${statusClass}" onchange="updateStatus(${index}, this.value)">
+                                <option style="font-size: 14px; background-color:white;" value="Pending" ${order.status === 'Pending' ? 'selected' : ''}>Pending</option>
+                                <option style="font-size: 14px; background-color:white;" value="Shipped" ${order.status === 'Shipped' ? 'selected' : ''}>Shipped</option>
+                                <option style="font-size: 14px; background-color:white;" value="Delivered" ${order.status === 'Delivered' ? 'selected' : ''}>Delivered</option>
+                                <option style="font-size: 14px; background-color:white;" value="Cancelled" ${order.status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
+                            </select>
+                        </td>
+                        <td style="text-align: right;">
+                            <button class="action-btn delete-btn" onclick="deleteOrder(${index})">DELETE ORDER</button>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            }
+
+            function addNewOrderRow(){
+                const newRow = document.createElement('tr');
+                newRow.className = "add-order-row";
+                newRow.innerHTML = `
+                    <td><input type="text" id="newId" class="add-input" placeholder="ORD-0000"></td>
+                    <td><input type="text" id="newStore" class="add-input" placeholder="Store Name"></td>
+                    <td><input type="text" id="newName" class="add-input" placeholder="Product Name"></td>
+                    <td><input type="number" id="newQty" class="add-input" value="1"></td>
+                    <td><input type="text" id="newTotal" class="add-input" placeholder="RM 0.00"></td>
+                    <td>
+                        <select id="newStatus" class="status-select status-pending">
+                            <option style="font-size: 14px; background-color:white;" value="Pending">Pending</option>
+                            <option style="font-size: 14px; background-color:white;" value="Shipped">Shipped</option>
+                            <option style="font-size: 14px; background-color:white;" value="Delivered">Delivered</option>
+                        </select>
+                    </td>
+                    <td style="text-align: right;">
+                        <button class="action-btn save-btn" onclick="saveNewOrder()">SAVE</button>
+                    </td>
+                `;
+                tableBody.prepend(newRow);
+                tableBody.scrollTop = 0;
+            }
+
+            function saveNewOrder(){
+                const id = document.getElementById('newId').value;
+                const store = document.getElementById('newStore').value;
+                const pName = document.getElementById('newName').value;
+                const qty = document.getElementById('newQty').value;
+                const total = document.getElementById('newTotal').value;
+                const status = document.getElementById('newStatus').value;
+
+                if(id && store && pName) {
+                    bookingsData.unshift({ id, store, pName, qty, total, status });
+                    renderBookings();
+                } else {
+                    alert("Please fill in all fields.");
+                }
+            }
+
+            function updateStatus(index, newStatus){
+                bookingsData[index].status = newStatus;
+                renderBookings();
+            }
+
+            function deleteOrder(index){
+                if(confirm(`Are you sure you want to delete order ${bookingsData[index].id}?`)) {
+                    bookingsData.splice(index, 1);
+                    renderBookings();
+                }
+            }
+
+            document.addEventListener("DOMContentLoaded", renderBookings);
+        </script>
+    </body>
+</html>

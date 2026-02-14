@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="styles.css">
+        <title>Admin - Staff Management</title>
+        <style>
+            #main-content{
+                text-align: center;
+            }
+
+            .staff-grid{
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 20px;
+                max-width: 1100px;
+                margin: 0 50px;
+            }
+
+            .staff-card, .add-staff-card{
+                background: white;
+                border-radius: 12px;
+                padding: 24px;
+                text-align: center;
+                position: relative;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+                border: 1px solid #eee;
+                transition: 0.3s;
+            }
+
+            .staff-card:hover{
+                box-shadow: 0 8px 15px rgba(0,0,0,0.08);
+                border-color: green;
+            }
+
+            .add-staff-card{
+                border: 2px dashed #2e7d32;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                cursor: pointer;
+                color: #2e7d32;
+            }
+
+            .add-staff-card:hover{
+                background: #f1f8e9;
+            }
+
+            .icon{
+                width: 60px;
+                height: 60px;
+                border-radius: 50%;
+                margin-bottom: 15px;
+                border: 2px solid #f0f0f0;
+            }
+
+            .staff-info h3{ 
+                margin: 0 0 8px 0; 
+                color: #333; 
+                font-size: 14px;
+                font-weight: 700;
+            }
+
+            .staff-info p{ 
+                margin: 3px 0; 
+                color: #777; 
+                font-size: 14px; 
+            }
+
+            .actions{
+                display: flex;
+                gap: 8px;
+                margin-top: 18px;
+                justify-content: center;
+            }
+
+            .action-btn{
+                flex: 1;
+                padding: 6px 4px;
+                border: none;
+                border-radius: 6px;
+                cursor: pointer;
+                font-size: 11px;
+                font-weight: 700;
+                transition: 0.2s;
+            }
+
+            .update-btn{
+                background: #e3f2fd;
+                color: #1976d2;
+            }
+
+            .update-btn:hover{
+                background: #1976d2;
+                color: white;
+            }
+
+            .delete-btn{
+                background: #ffebee;
+                color: #d32f2f;
+            }
+
+            .delete-btn:hover{
+                background: #d32f2f;
+                color: white;
+            }
+
+            #modal-overlay{
+                display: none;
+                position: fixed;
+                top: 0; left: 0; width: 100%; height: 100%;
+                background: rgba(0,0,0,0.4);
+                justify-content: center;
+                align-items: center;
+                z-index: 2000;
+            }
+
+            .modal-content{
+                background: white;
+                padding: 30px;
+                border-radius: 12px;
+                width: 350px;
+                box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            }
+
+            .modal-content h2{
+                font-size: 18px;
+                margin-bottom: 20px; color: #333;
+            }
+
+            .modal-content input{
+                width: 100%;
+                margin-bottom: 12px;
+                padding: 10px;
+                border: 1px solid #ddd;
+                border-radius: 6px;
+                font-size: 13px;
+                box-sizing: border-box;
+            }
+
+            .btns{
+                display: flex;
+                gap: 10px;
+                margin-top: 10px;
+            }
+
+            .btns button{
+                flex: 1;
+                padding: 10px;
+                border-radius: 6px;
+                border: none;
+                font-weight: bold;
+                cursor: pointer;
+                font-size: 13px;
+            }
+
+            .save-btn{
+                background: #2e7d32; color: white;
+            }
+
+            .cancel-btn{
+                background: #f5f5f5; color: #666;
+            }
+        </style>
+    </head>
+    <body>
+        <header id='topbar'>  
+            <p>System Status: All Systems Operational | Admin Session Active | Last Login: Today, 09:15 AM | 232 Users Online | Revenue increased 12% this week | Please give A+ Madam | Low Stock Items : 5 | System Status: All Systems Operational | Admin Session Active | Last Login: Today, 09:15 AM | 232 Users Online</p> 
+        </header>
+
+        <aside id='sidebar'>
+            <a id="logo" href="index.html">
+                <img src="./media/logo.webp" alt="Logo" style="width: 120px;">
+            </a>
+            
+            <a href="admin-dashboard.html"><span>🏠</span>Dashboard</a>
+            <a href="members.html"><span>➕</span>Manage Members</a>
+            <a href="staff.html"  class="active-link"><span>👤</span>Manage Staff</a>
+            <a href="manage-products.html"><span>🏪</span>Manage Products</a>
+            <a href="manage-services.html"><span>⚙️</span>Manage Services</a>
+            <a href="bookings.html"><span>🖥️</span>Manage Bookings</a>
+            <a href="sales-report.html"><span>💯</span>Sales Report</a>
+            
+            <a href="admin-login.html" class="logout-btn">Logout</a>
+        </aside>
+
+        <div id='main-content'>
+            <div>
+                <h1 style="color: #333; margin-bottom: 5px;">Staff Management</h1>
+                <p style="color: #666; margin-bottom: 30px; font-size: 14px;">Add, update, or remove staff credentials and shop assignments.</p>
+            </div>
+            
+            <div class="staff-grid" id="staffContainer">
+                <div class="add-staff-card" onclick="openAddModal()">
+                    <div style="font-size: 40px; margin-bottom: 10px;">+</div>
+                    <h3 style="font-size: 16px;">Add New Staff</h3>
+                </div>
+            </div>
+        </div>
+
+        <div id="modal-overlay">
+            <div class="modal-content">
+                <h2 id="modalTitle">Add New Staff</h2>
+                <input type="hidden" id="editCardId"> 
+                <input type="text" id="newName" placeholder="Full Name">
+                <input type="text" id="newId" placeholder="Staff ID (e.g. STF-001)">
+                <input type="text" id="newShop" placeholder="Assigned Shop">
+                <div class="btns">
+                    <button class="save-btn" onclick="saveUpdate()">Save Member</button>
+                    <button class="cancel-btn" onclick="closeModal()">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            const staffContainer = document.getElementById('staffContainer');
+            const modal = document.getElementById('modal-overlay');
+            const addCard = document.querySelector('.add-staff-card');
+            const modalTitle = document.getElementById('modalTitle');
+            const editCardId = document.getElementById('editCardId');
+
+            const initialStaff = [
+                { name: "Divyaadharshany", id: "STF-101", shop: "iMPIAN KL" },
+                { name: "Adam Zuhri", id: "STF-102", shop: "iMPIAN Bangsar" },
+                { name: "Zafril Putra", id: "STF-108", shop: "iMPIAN Cheras" },
+                { name: "Arif", id: "STF-106", shop: "iMPIAN Damansara" },
+                { name: "Aisyah", id: "STF-104", shop: "iMPIAN Subang" },
+                { name: "Amir Daniel", id: "STF-103", shop: "iMPIAN PJ" },
+                { name: "Veronica", id: "STF-105", shop: "iMPIAN KL" },
+                { name: "Adam Haikal", id: "STF-107", shop: "iMPIAN Shah Alam" },
+            ];
+
+            function addStaff(staff){
+                const card = document.createElement('div');
+                card.className = 'staff-card';
+                const timestampId = 'card-' + Math.random().toString(36).substr(2, 9);
+                card.id = timestampId;
+                
+                card.innerHTML = `
+                    <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(staff.name)}&background=random&color=fff" class="icon" alt="Staff Profile">
+                    <div class="staff-info">
+                        <h3 class="display-name">${staff.name}</h3>
+                        <p>ID: <span style="font-size: 14px;" class="display-id">${staff.id}</span></p>
+                        <p>Shop: <span style="font-size: 14px;" class="display-shop">${staff.shop}</span></p>
+                    </div>
+                    
+                    <div class="actions">
+                        <button class="action-btn update-btn" onclick="updateStaff('${timestampId}')">UPDATE</button>
+                        <button class="action-btn delete-btn" onclick="deleteStaff('${timestampId}')">DELETE</button>
+                    </div>
+                `;
+                addCard.after(card);
+            }
+
+            function deleteStaff(cardId){
+                if(confirm("Are you sure you want to remove this staff member?")){
+                    document.getElementById(cardId).style.opacity = '0';
+                    document.getElementById(cardId).remove();
+                }
+            }
+
+            function openAddModal(){
+                modalTitle.innerText = "Add New Staff";
+                editCardId.value = ""; 
+                clearInputs();
+                modal.style.display = 'flex';
+            }
+
+            function updateStaff(cardId){
+                const card = document.getElementById(cardId);
+                modalTitle.innerText = "Update Staff Info";
+                editCardId.value = cardId; 
+
+                document.getElementById('newName').value = card.querySelector('.display-name').innerText;
+                document.getElementById('newId').value = card.querySelector('.display-id').innerText;
+                document.getElementById('newShop').value = card.querySelector('.display-shop').innerText;
+
+                modal.style.display = 'flex';
+            }
+
+            function saveUpdate(){
+                const name = document.getElementById('newName').value.trim();
+                const id = document.getElementById('newId').value.trim();
+                const shop = document.getElementById('newShop').value.trim();
+                const targetCardId = editCardId.value;
+
+                if(!name || !id || !shop){
+                    alert("Please fill all fields");
+                    return;
+                }
+
+                if(targetCardId){
+                    const card = document.getElementById(targetCardId);
+                    card.querySelector('.display-name').innerText = name;
+                    card.querySelector('.display-id').innerText = id;
+                    card.querySelector('.display-shop').innerText = shop;
+                    card.querySelector('.icon').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random&color=fff`;
+                }
+                else{
+                    addStaff({ name, id, shop });
+                }
+                closeModal();
+            }
+
+            function closeModal(){
+                modal.style.display = 'none';
+            }
+
+            function clearInputs(){
+                document.getElementById('newName').value = '';
+                document.getElementById('newId').value = '';
+                document.getElementById('newShop').value = '';
+            }
+
+            function init(){
+                [...initialStaff].reverse().forEach(staff => addStaff(staff));
+            }
+
+            document.addEventListener("DOMContentLoaded", init);
+        </script>
+    </body>
+</html>

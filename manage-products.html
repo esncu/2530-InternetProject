@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="styles.css">
+        <title>Admin - Products Management</title>
+        <style>
+            .product-grid{
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                gap: 25px;
+            }
+
+            .product-card{
+                background: white;
+                border-radius: 24px;
+                box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+                padding: 25px;
+                display: flex;
+                flex-direction: column;
+                transition: transform 0.3s ease;
+            }
+
+            .add-card{
+                border: 2px dashed #ccc;
+                background: white;
+                padding-top: 70px;
+            }
+
+            .add-card input, .add-card select{
+                width: 90%;
+                font-size: 12px;
+                padding: 8px;
+                margin-bottom: 10px;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                box-sizing: border-box;
+                align-self: center;
+            }
+
+            .product-info h3{
+                margin: 0 0 10px 0;
+                font-size: 16px;
+                color: #1e293b;
+                font-weight: 700; 
+            }
+
+            .product-price{
+                font-size: 14px;
+                font-weight: 600;
+                color: green;
+                margin-bottom: 20px;
+                display: block;
+            }
+
+            .update-btn{
+                flex: 1;
+                padding: 12px 5px;
+                background: rgb(27, 27, 27);
+                color: white;
+                border: none;
+                border-radius: 14px;
+                font-weight: 700;
+                font-size: 12px;
+                box-shadow: 0 10px 20px rgba(37, 99, 235, 0.2);
+            }
+
+            .delete-btn{
+                flex: 1;
+                padding: 12px 5px;
+                background: #dc2626;
+                color: white;
+                border: none;
+                border-radius: 14px; font-weight: 700; 
+                font-size: 12px;
+                box-shadow: 0 10px 20px rgba(220, 38, 38, 0.05);
+            }
+
+            .save-btn{
+                width: 70%;
+                padding: 14px;
+                background: green;
+                color: white;
+                border: none;
+                border-radius: 14px;
+                font-weight: 700; cursor: pointer; margin-top: 10px;
+                font-size: 12px;
+                align-self: center;
+            }
+
+            .button-group{
+                display: flex;
+                gap: 10px;
+                margin-top: auto;
+            }
+
+            .product-image{
+                width: 100%;
+                height: 180px;
+                object-fit: cover;
+                margin-bottom: 15px;
+                background-color: #f1f5f9;
+            }
+
+            .edit-input{
+                width: 95%;
+                padding: 5px;
+                margin-bottom: 5px;
+                border: 1px solid blue;
+                border-radius: 4px;
+                font-size: 14px;
+            }
+        </style>
+    </head>
+    <body>
+        <header id='topbar'>  
+            <p>System Status: All Systems Operational | Admin Session Active | Last Login: Today, 09:15 AM | 232 Users Online | Revenue increased 12% this week | Please give A+ Madam | Low Stock Items : 5 | System Status: All Systems Operational | Admin Session Active | Last Login: Today, 09:15 AM | 232 Users Online</p> 
+        </header>
+
+        <aside id='sidebar'>
+            <a id="logo" href="index.html">
+                <img src="./media/logo.webp" alt="Logo" style="width: 120px;">
+            </a>
+            
+            <a href="admin-dashboard.html"><span>🏠</span>Dashboard</a>
+            <a href="members.html"><span>➕</span>Manage Members</a>
+            <a href="staff.html"><span>👤</span>Manage Staff</a>
+            <a href="manage-products.html" class="active-link"><span>🏪</span>Manage Products</a>
+            <a href="manage-services.html"><span>⚙️</span>Manage Services</a>
+            <a href="bookings.html"><span>🖥️</span>Manage Bookings</a>
+            <a href="sales-report.html"><span>💯</span>Sales Report</a>
+            
+            <a href="admin-login.html" class="logout-btn">Logout</a>
+        </aside>
+
+        <div id='main-content'>
+            <div>
+                <h1 style="color: #333; margin-bottom: 5px; text-align: center;">Product Management</h1>
+                <p style="color: #666; margin-bottom: 30px; font-size: 14px; text-align: center;">Add, Update, or Delete products from the store.</p>
+            </div>
+            
+            <div class="product-grid" id="admin-product-display"></div>
+        </div>
+
+        <script>
+            let editId = null;
+
+            const defaultProducts = [
+                    { id: 1, name: "Wireless Ergonomic Mouse X70II – Precision Control Edition", price: 25, category: "Accessories", image: "media/mouse2.jpg" },
+                    { id: 2, name: "Mechanical Keyboard High-Performance Typing Experience", price: 75, category: "Accessories", image: "media/keyboard1.avif" },
+                    { id: 3, name: "Gaming Headset – Immersive Surround Sound Pro Series", price: 120, category: "Audio", image: "media/headset1.webp" },
+                    { id: 4, name: "Wireless Mouse – Sleek Design Comfort Grip", price: 25, category: "Accessories", image: "media/mouse1.webp" },
+                    { id: 5, name: "Mechanical Keyboard – Durable Switch Technology", price: 75, category: "Accessories", image: "media/keyboard2.jpg" },
+                    { id: 6, name: "Gaming Headset – Noise-Cancelling Audio Elite", price: 120, category: "Audio", image: "media/headset2.jpg" },
+                    { id: 7, name: "Wireless Mouse – Compact Travel-Friendly Edition", price: 25, category: "Accessories", image: "media/mouse3.jpg" },
+                    { id: 8, name: "Mechanical Keyboard – RGB Backlit Gaming Series", price: 75, category: "Accessories", image: "media/keyboard3.avif" },
+                    { id: 9, name: "Gaming Headset – Studio-Quality Microphone & Sound", price: 120, category: "Audio", image: "media/headset3.jpg" }
+            ];
+
+
+            function getProducts(){
+                return JSON.parse(localStorage.getItem('allProducts')) || defaultProducts;
+            }
+
+            function displayAdminProducts(){
+                const display = document.getElementById('admin-product-display');
+                const products = getProducts();
+                display.innerHTML = ''; 
+
+                const addCard = document.createElement('div');
+                addCard.className = 'product-card add-card';
+                addCard.innerHTML = `
+                    <h3 style="text-align:center; font-size: 14px; padding-bottom: 20px;">Add New Product</h3>
+                    <input type="text" id="new-name" placeholder="Product Name">
+                    <input type="number" id="new-price" placeholder="Price (RM)">
+                    <select id="new-category">
+                        <option style="font-size: 14px" value="Accessories">Accessories</option>
+                        <option style="font-size: 14px" value="Audio">Audio</option>
+                        <option style="font-size: 14px" value="Peripheral">Peripheral</option>
+                    </select>
+                    <button class="save-btn" onclick="addProduct()">Save Product</button>
+                `;
+                display.appendChild(addCard);
+
+                products.forEach((product) => {
+                    const card = document.createElement('div');
+                    card.className = 'product-card';
+                    
+                    const isEditing = editId === product.id;
+
+                    card.innerHTML = `
+                        <img src="${product.image}" alt="${product.name}" class="product-image">
+                        <div class="product-info">
+                            ${isEditing ? 
+                                `<input type="text" id="edit-name-${product.id}" class="edit-input" value="${product.name}">
+                                <input type="number" id="edit-price-${product.id}" class="edit-input" value="${product.price}">
+                                <select id="edit-cat-${product.id}" class="edit-input" style="margin-left: 10px">
+                                    <option value="Accessories" ${product.category === 'Accessories' ? 'selected' : ''}>Accessories</option>
+                                    <option value="Audio" ${product.category === 'Audio' ? 'selected' : ''}>Audio</option>
+                                    <option value="Peripheral" ${product.category === 'Peripheral' ? 'selected' : ''}>Peripheral</option>
+                                </select>` 
+                                : 
+                                `<h3>${product.name}</h3>
+                                <p style="font-size:14px; color:gray; margin-top:-5px; margin-bottom: 10px">Category: ${product.category || 'N/A'}</p>
+                                <span class="product-price">RM ${product.price}</span>`
+                            }
+                        </div>
+                        <div class="button-group">
+                            ${isEditing ? 
+                                `<button class="update-btn" style="background:#059669; margin-top:10px;" onclick="saveUpdate(${product.id})">Confirm</button>
+                                <button class="delete-btn" style="background:#64748b; margin-top:10px;" onclick="cancelEdit()">Cancel</button>` 
+                                : 
+                                `<button class="update-btn" onclick="toggleEdit(${product.id})">Update</button>
+                                <button class="delete-btn" onclick="deleteProduct(${product.id})">Delete</button>`
+                            }
+                        </div>
+                    `;
+                    display.appendChild(card);
+                });
+            }
+
+            function addProduct(){
+                const name = document.getElementById('new-name').value;
+                const priceInput = document.getElementById('new-price').value;
+                const category = document.getElementById('new-category').value;
+                const price = parseFloat(priceInput);
+
+                const defaultImg = "media/product.webp";
+
+                if (!name || !priceInput) {
+                    return alert("Please fill in all fields.");
+                }
+
+                const products = getProducts();
+                
+                products.unshift({ 
+                    id: Date.now(), 
+                    name: name, 
+                    price: price, 
+                    category: category,
+                    image: defaultImg 
+                });
+
+                localStorage.setItem('allProducts', JSON.stringify(products));
+                
+                displayAdminProducts();
+            }
+
+            function toggleEdit(id){
+                editId = id; 
+                displayAdminProducts(); 
+            }
+
+            function cancelEdit(){
+                editId = null;
+                displayAdminProducts();
+            }
+
+            function saveUpdate(id){
+                const products = getProducts();
+                const product = products.find(p => p.id === id);
+                
+                const newName = document.getElementById(`edit-name-${id}`).value;
+                const newPrice = document.getElementById(`edit-price-${id}`).value;
+                const newCategory = document.getElementById(`edit-cat-${id}`).value;
+
+                if (newName && newPrice) {
+                    product.name = newName;
+                    product.price = parseFloat(newPrice);
+                    product.category = newCategory;
+                    localStorage.setItem('allProducts', JSON.stringify(products));
+                    editId = null; 
+                    displayAdminProducts();
+                }
+            }
+
+            function deleteProduct(id){
+                if (confirm("Are you sure you want to remove this product?")) {
+                    let products = getProducts();
+                    products = products.filter(p => p.id !== id);
+                    localStorage.setItem('allProducts', JSON.stringify(products));
+                    displayAdminProducts();
+                }
+            }
+
+            displayAdminProducts();
+        </script>
+    </body>
+</html>
